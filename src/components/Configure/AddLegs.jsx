@@ -162,6 +162,7 @@ const AddLegs = () => {
         onClick={addLeg}
         disableRipple
         sx={{
+          backgroundColor: "button.main",
           color: "white",
           "&.Mui-disabled": {
             color: "#b5b5b5"
