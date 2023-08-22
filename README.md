@@ -16,7 +16,7 @@ An Option Payoff visualizing tool, that allows you to create strategies, add and
 4. Persistence of saved strategies through local storage.
 
 ## To be added
-1. Lines inidcating break-even point(s).
+1. Lines indicating break-even point(s).
 2. Tooltips.
 3. Zoom functionality for chart.
 
