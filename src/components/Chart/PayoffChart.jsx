@@ -2,6 +2,17 @@ import { useRef, useEffect, useState, useContext } from 'react';
 import { StrategyContext } from '../../Contexts/StrategyContextProvider';
 import * as d3 from 'd3';
 
+const tooltipStyle = {
+  position: "absolute",
+  display: "none",
+  padding: "2px 4px",
+  width: "auto",
+  background: "#3b87eb",
+  color: "white",
+  fontSize: "12px",
+  borderRadius: "2px"
+}
+
 const calculatePayoff = (underlyingPrice, leg) => {
   const strike = leg.strike;
   const premium = leg.premium;
@@ -116,6 +127,7 @@ const PayoffChart = () => {
     const positiveLines = splitLines(positiveData);
     const negativeLines = splitLines(negativeData);
 
+    // Draw separate lines for each segment
     positiveLines.forEach(positiveLine => {
       svg.append("path")
         .attr("d", line(positiveLine))
@@ -198,6 +210,77 @@ const PayoffChart = () => {
         };
       };
     });
+        
+    const crosshairVertical = svg
+    .append("line")
+    .attr("class", "crosshair")
+    .style("stroke", "#858483")
+    .style("stroke-width", 1)
+    .style("display", "none");
+
+    const crosshairHorizontal = svg
+    .append("line")
+    .attr("class", "crosshair")
+    .style("stroke", "#858483")
+    .style("stroke-width", 1)
+    .style("display", "none");
+
+    const onMouseMove = (e) => {
+      e.preventDefault();
+        const [x, y] = d3.pointers(e)[0];
+        const underlyingPrice = Math.round(xScale.invert(x));
+        const payoff = Math.round(yScale.invert(y));
+        
+        const xTooltip = document.getElementById("x-axis-tooltip");
+        const yTooltip = document.getElementById("y-axis-tooltip");
+        crosshairVertical
+        .style("display", "block")
+        .attr("x1", x)
+        .attr("x2", x)
+        .attr("y1", 0)
+        .attr("y2", HEIGHT)
+
+        crosshairHorizontal
+        .style("display", "block")
+        .attr("x1", 0)
+        .attr("x2", WIDTH)
+        .attr("y1", y)
+        .attr("y2", y)
+
+        xTooltip.style.display = "block";
+        xTooltip.innerHTML = underlyingPrice;
+        xTooltip.style.left = x + MARGIN.LEFT + "px";
+        xTooltip.style.top = HEIGHT + 147 + "px";
+
+        yTooltip.style.display = "block";
+        yTooltip.innerHTML = payoff;
+        yTooltip.style.left = 50 - yTooltip.clientWidth + "px";
+        yTooltip.style.top = y + 127 + "px";
+    }
+
+    const onMouseOut = (e) => {
+      e.preventDefault();
+      const xTooltip = document.getElementById("x-axis-tooltip");
+      const yTooltip = document.getElementById("y-axis-tooltip");
+      
+      crosshairVertical.style("display", "none");
+      crosshairHorizontal.style("display", "none");
+      xTooltip.style.display = "none";
+      yTooltip.style.display = "none";
+    };
+
+    svg.append("rect")
+      .attr("class", "overlay")
+      .attr("position", "relative")
+      .attr("z-index", 10)
+      .attr("width", WIDTH)
+      .attr("height", HEIGHT)
+      .attr("fill", "none")
+      .style("pointer-events", "all")
+      .on("mousemove", onMouseMove)
+      .on("touchstart", onMouseMove)
+      .on("mouseout", onMouseOut)
+      .on("touchend", onMouseOut); 
 
     svg.append('text')
       .attr('class', 'x-label')
@@ -206,6 +289,7 @@ const PayoffChart = () => {
       .attr('fill', "#aeafb0")
       .attr('y', HEIGHT + 35)
       .attr('text-anchor', 'middle')
+      .attr("pointer-events", "none")
       .text('Underlying Price');
 
     svg.append('text')
@@ -216,6 +300,7 @@ const PayoffChart = () => {
       .attr('y', -MARGIN.LEFT + 20)
       .attr('text-anchor', 'middle')
       .attr('transform', 'rotate(-90)')
+      .attr("pointer-events", "none")
       .text('Payoff');
   };
 
@@ -242,6 +327,8 @@ const PayoffChart = () => {
       }}
     >
       <div ref={chartAreaRef} style={{ display: 'flex' }}></div>
+      <div id="x-axis-tooltip" style={{...tooltipStyle}}></div>
+      <div id="y-axis-tooltip" style={{...tooltipStyle}}></div>
     </div>
   );
 };
