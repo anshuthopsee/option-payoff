@@ -248,12 +248,12 @@ const PayoffChart = () => {
         .attr("y2", y)
 
         xTooltip.style.display = "block";
-        xTooltip.innerHTML = underlyingPrice;
+        xTooltip.textContent = underlyingPrice ? underlyingPrice : 0;
         xTooltip.style.left = x + MARGIN.LEFT + "px";
         xTooltip.style.top = HEIGHT + 147 + "px";
 
         yTooltip.style.display = "block";
-        yTooltip.innerHTML = payoff;
+        yTooltip.textContent = payoff;
         yTooltip.style.left = 50 - yTooltip.clientWidth + "px";
         yTooltip.style.top = y + 127 + "px";
     }
