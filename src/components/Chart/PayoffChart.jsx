@@ -40,6 +40,27 @@ const generatePayoffDiagram = (legs) => {
   return data;
 };
 
+const splitLines = (data) => { 
+  let currentSegment = [];
+  const segments = [];
+  const thresholdDistance = 1;
+  for (let i = 0; i < data.length; i++) {
+    currentSegment.push(data[i]);
+
+    if (i < data.length - 1) {
+      const distance = Math.abs(data[i + 1].x - data[i].x);
+
+      if (distance >= thresholdDistance) {
+        segments.push(currentSegment);
+        currentSegment = [];
+      }
+    } else {
+      segments.push(currentSegment);
+    };
+  };
+  return segments;
+};
+
 const PayoffChart = () => {
   const chartParentRef = useRef();
   const chartAreaRef = useRef();
@@ -61,19 +82,6 @@ const PayoffChart = () => {
     const MARGIN = { TOP: 20, RIGHT: 30, BOTTOM: 50, LEFT: 50 };
     const WIDTH = width - MARGIN.LEFT - MARGIN.RIGHT;
     const HEIGHT = height - MARGIN.TOP - MARGIN.BOTTOM;
-
-    // const tooltip = d3.select(chartAreaRef.current)
-    //   .append("div")
-    //   .attr("class", "tooltip")
-    //   .style("opacity", 0)
-    //   .style("position", "absolute")
-    //   .style("pointer-events", "none")
-    //   .style("background-color", "#34a1eb")
-    //   .style("font-size", "14px")
-    //   .style("color", "white")
-    //   .style("border", "1px solid #ddd")
-    //   .style("padding", "8px")
-    //   .style("border-radius", "4px");
 
     const selectedLegs = legs.filter(leg => leg.selected);
     selectedLegs.sort((a, b) => a.strike - b.strike);
@@ -102,20 +110,27 @@ const PayoffChart = () => {
       .x(d => xScale(d.x))
       .y(d => yScale(d.y))
 
-    svg.append("path")
-      .attr("d", line(data.filter((d) => d.y < 0)))
-      .attr("stroke", "red")
-      .attr("stroke-width", 2)
-      .attr("fill", "none")
-      .attr("fill-opacity", 0)
-      .attr("stroke-linejoin", "miter")
-      .attr("stroke-miterlimit", "1")
+    const positiveData = data.filter((d) => d.y >= 0);
+    const negativeData = data.filter((d) => d.y < 0);
 
-    svg.append("path")
-      .attr("d", line(data.filter((d) => d.y > 0)))
-      .attr("stroke", "#32CD32")
-      .attr("fill", "none")
-      .attr("stroke-width", 2)
+    const positiveLines = splitLines(positiveData);
+    const negativeLines = splitLines(negativeData);
+
+    positiveLines.forEach(positiveLine => {
+      svg.append("path")
+        .attr("d", line(positiveLine))
+        .attr("stroke", "#32CD32")
+        .attr("stroke-width", 2)
+        .attr("fill", "none");
+    });
+
+    negativeLines.forEach(negativeLine => {
+      svg.append("path")
+        .attr("d", line(negativeLine))
+        .attr("stroke", "red")
+        .attr("stroke-width", 2)
+        .attr("fill", "none");
+    });
 
     const insideArea = d3.area()
       .x(d => xScale(d.x))
@@ -144,12 +159,6 @@ const PayoffChart = () => {
       .attr('stroke-dasharray', '12 12')
       .attr("stroke-width", "2px")
       .call(d3.axisBottom(xZeroLine));
-
-      svg.append("defs").append("clipPath")
-      .attr("id", "clip")
-      .append("rect")
-      .attr("width", WIDTH)
-      .attr("height", HEIGHT);
     
     const outsideArea = d3.area()
       .x(d => xScale(d.x))
@@ -162,28 +171,33 @@ const PayoffChart = () => {
       .attr("d", outsideArea)
       .attr("fill", "#e36c64")
       .attr("fill-opacity", 0.3)
-      .attr("clip-path", "url(#clip)");
 
-    svg.append("rect")
-      .attr("class", "overlay")
-      .attr("width", WIDTH)
-      .attr("height", HEIGHT)
-      .style("fill", "none")
-      .style("pointer-events", "all")
-    
-    // svg.select(".overlay")
-    //   .on("mouseover", () => tooltip.style("opacity", 1))
-    //   .on("mousemove", (event) => {
-    //     const [xPos, yPos] = d3.pointer(event);
-    //     const underlyingPrice = xScale.invert(xPos);
-    //     const payoff = yScale.invert(yPos);
-    
-    //     tooltip.style("left", `${xPos}px`).style("top", `${yPos}px`);
-    //     tooltip.html(`Price: ${underlyingPrice.toFixed(2)}<br>Payoff: ${payoff.toFixed(2)}`);
-    //   })
-    //   .on("mouseout", () => {
-    //     tooltip.style("opacity", 0);
-    //   });
+    const drawBreakEvenLine = (breakEven) => {
+      breakEven = Math.round(breakEven);
+      const xPosition = xScale(breakEven);
+      const yMin = d3.min(data, d => d.y);
+      const yMax = d3.max(data, d => d.y);
+
+      svg.append("line")
+        .attr("x1", xPosition)
+        .attr("y1", yScale(yMin))
+        .attr("x2", xPosition)
+        .attr("y2", yScale(yMax))
+        .attr("stroke", "#a19f9f")
+        .attr("stroke-width", 1.5)
+        .attr("stroke-dasharray", "12 12");
+    };
+
+    let prevBreakEven = null;
+    const sortedData = [...data].sort((a, b) => a.x - b.x);
+    sortedData.forEach(d => {
+      if (Math.round(d.y) === 0) {
+        if (prevBreakEven === null || Math.abs(d.x - prevBreakEven) >= 1) {
+          drawBreakEvenLine(d.x);
+          prevBreakEven = d.x;
+        };
+      };
+    });
 
     svg.append('text')
       .attr('class', 'x-label')
