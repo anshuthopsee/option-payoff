@@ -10,7 +10,9 @@ const tooltipStyle = {
   background: "#3b87eb",
   color: "white",
   fontSize: "12px",
-  borderRadius: "2px"
+  borderRadius: "2px",
+  whiteSpace: "pre-line",
+  overflowWrap: "wrap",
 }
 
 const calculatePayoff = (underlyingPrice, leg) => {
@@ -127,7 +129,6 @@ const PayoffChart = () => {
     const positiveLines = splitLines(positiveData);
     const negativeLines = splitLines(negativeData);
 
-    // Draw separate lines for each segment
     positiveLines.forEach(positiveLine => {
       svg.append("path")
         .attr("d", line(positiveLine))
@@ -156,10 +157,12 @@ const PayoffChart = () => {
       .attr("fill", "#90de97")
       .attr("fill-opacity", 0.3)
 
+    const maxTicks = Math.floor(WIDTH / 70);
+
     svg.append('g')
       .attr('class', 'x-axis')
       .attr('transform', `translate(0, ${HEIGHT})`)
-      .call(d3.axisBottom(xScale));
+      .call(d3.axisBottom(xScale).ticks(maxTicks));
 
     svg.append('g')
       .attr('class', 'y-axis')
@@ -249,12 +252,14 @@ const PayoffChart = () => {
 
         xTooltip.style.display = "block";
         xTooltip.textContent = underlyingPrice ? underlyingPrice : 0;
-        xTooltip.style.left = x + MARGIN.LEFT + "px";
+        const adjustedX = x + Math.max(MARGIN.LEFT, xTooltip.clientWidth / 2) - Math.min(MARGIN.RIGHT, xTooltip.clientWidth / 2) + 10;
+        xTooltip.style.left = (adjustedX) + "px";
         xTooltip.style.top = HEIGHT + 147 + "px";
 
         yTooltip.style.display = "block";
         yTooltip.textContent = payoff;
-        yTooltip.style.left = 50 - yTooltip.clientWidth + "px";
+        const adjustedY = 50 - yTooltip.clientWidth
+        yTooltip.style.left = adjustedY + "px";
         yTooltip.style.top = y + 127 + "px";
     }
 
