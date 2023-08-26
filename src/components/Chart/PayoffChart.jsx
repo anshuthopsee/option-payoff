@@ -281,6 +281,7 @@ const PayoffChart = () => {
       .attr("width", WIDTH)
       .attr("height", HEIGHT)
       .attr("fill", "none")
+      .attr("cursor", "crosshair")
       .style("pointer-events", "all")
       .on("mousemove", onMouseMove)
       .on("touchstart", onMouseMove)

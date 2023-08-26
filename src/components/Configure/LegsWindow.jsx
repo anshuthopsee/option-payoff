@@ -11,6 +11,7 @@ import {
 } from '@mui/x-data-grid'
 import NoLegsOverlay from './NoLegsOverlay';
 import { StrategyContext } from '../../Contexts/StrategyContextProvider';
+import { select } from 'd3';
 
 export default function LegsWindow({ legs }) {
 
@@ -72,7 +73,11 @@ export default function LegsWindow({ legs }) {
     updateLegs(legs.map((row) => (row.id === newRow.id ? updatedRow : row)));
     return updatedRow;
   };
-  
+
+  const customLocaleText = {
+    footerRowSelected: count => `${count} ${count === 1 ? "leg" : "legs"} selected`
+  };
+
   const columns = [
     {
       field: 'action',
@@ -179,6 +184,7 @@ export default function LegsWindow({ legs }) {
         onRowModesModelChange={handleRowModesModelChange}
         onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
+        localeText={customLocaleText}
         autoPageSize
         slots={{
           noRowsOverlay: NoLegsOverlay,

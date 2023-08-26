@@ -4,14 +4,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import PayoffChart from './PayoffChart';
 
-const getStrategyName = (selected) => {
-  if (Object.keys(PRESET_NAMES).includes(selected)) {
-    return PRESET_NAMES[selected];
-  } else {
-    return selected;
-  }
-};
-
 const Chart = () => {
   const chartAreaRef = useRef();
   const { selectedPreset } = useContext(StrategyContext);
