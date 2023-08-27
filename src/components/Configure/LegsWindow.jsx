@@ -11,7 +11,6 @@ import {
 } from '@mui/x-data-grid'
 import NoLegsOverlay from './NoLegsOverlay';
 import { StrategyContext } from '../../Contexts/StrategyContextProvider';
-import { select } from 'd3';
 
 export default function LegsWindow({ legs }) {
 

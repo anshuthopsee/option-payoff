@@ -170,14 +170,14 @@ const PayoffChart = () => {
 
     svg.append('g')
       .attr('class', 'x-axis-zero')
-      .attr("transform", `translate(0, ${yScale(Math.min(d3.max(data, d => d.y), 0))})`)
+      .attr("transform", `translate(0, ${Math.min(yScale(Math.min(d3.max(data, d => d.y), 0)), HEIGHT)})`)
       .attr('stroke-dasharray', '12 12')
       .attr("stroke-width", "2px")
       .call(d3.axisBottom(xZeroLine));
     
     const outsideArea = d3.area()
       .x(d => xScale(d.x))
-      .y0(yScale(0))
+      .y0(yScale(Math.min(d3.max(data, d => d.y), 0)))
       .y1(d => yScale(d.y))
       .defined(d => d.y < 0);
     
