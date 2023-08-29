@@ -8,7 +8,6 @@ const getSelectedPreset = (defaultPresetName) => {
   if (!hash) return { name: defaultPresetName, custom: false };
 
   const pathName = splitWords(hash);
-  console.log(pathName)
   const inPresets = Object.keys(PRESETS).includes(pathName);
   if (inPresets) {
     return { name: pathName, custom: false }
