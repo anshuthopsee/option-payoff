@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import { StrategyContext } from '../../Contexts/StrategyContextProvider';
 import { CustomPresetsContext } from '../../Contexts/CustomPresetsContextProvider';
-import { ToastContext } from '../../contexts/ToastContextProvider';
+import { ToastContext } from '../../Contexts/ToastContextProvider';
 import CancelIcon from '@mui/icons-material/Close';
 
 const CustomSVG = ({ name, index }) => {
