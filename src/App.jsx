@@ -37,7 +37,8 @@ function App() {
     palette: {
       mode: darkMode ? "dark" : "light",
       text: {
-        primary: darkMode ? "#ffffff" : "#0a0a0a"
+        primary: darkMode ? "#ffffff" : "#0a0a0a",
+        secondary: darkMode ? "#d1d1d1" : "#525252",
       },
       background: {
         default: darkMode ? "#121212" : "#ebebeb",

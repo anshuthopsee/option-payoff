@@ -8,6 +8,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { CustomPresetsContext } from '../../Contexts/CustomPresetsContextProvider';
 import { ToastContext } from '../../Contexts/ToastContextProvider';
+import { PRESETS } from '../../const/presets';
+import { Typography } from '@mui/material';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
@@ -26,9 +28,14 @@ export default function SaveNewDialog({ dialogOpen, setDialogOpen }) {
 
   const handleChange = (e) => {
     const { value } = e.target;
+    if (value.includes("-")) return;
+    if (value.includes('"')) return;
+    if (value.includes("/")) return;
     setStrategyName(value);
 
-    const nameExists = !customPresets.every((preset) => preset.name !== value);
+    const nameExists = !customPresets.every((preset) => preset.name !== value)
+    || Object.keys(PRESETS).includes(value);
+
     if (nameExists) {
       setSaveDisabled(true);
     } else {
@@ -53,7 +60,9 @@ export default function SaveNewDialog({ dialogOpen, setDialogOpen }) {
   return (
     <Dialog open={dialogOpen} onClose={handleClose} TransitionComponent={Transition}>
       <DialogTitle>Save new strategy</DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{ maxWidth: "440px" }}>
+        <Typography variant='body2' sx={{mb: "5x", color: "text.secondary"}}>Max length - 17 characters</Typography>
+        <Typography variant='body2' sx={{mb: "10px", color: "text.secondary"}}>Name cannot match exisiting names, or have any of [-"/] in it</Typography>
         <TextField
           autoFocus
           margin="dense"
@@ -66,7 +75,7 @@ export default function SaveNewDialog({ dialogOpen, setDialogOpen }) {
           onChange={handleChange}
           focused
           inputProps={{
-            maxLength: 15
+            maxLength: 17
           }}
         />
       </DialogContent>

@@ -5,6 +5,7 @@ export const joinWords = (inputString) => {
 };
 
 export const splitWords = (hyphenSeparatedString) => {
+  hyphenSeparatedString = hyphenSeparatedString;
   const lowercaseWords = hyphenSeparatedString.split('-');
   return lowercaseWords.join(' ');
 };
