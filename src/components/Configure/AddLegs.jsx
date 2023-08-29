@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import AddIcon from '@mui/icons-material/Add';
-import { StrategyContext } from '../../Contexts/StrategyContextProvider';
+import { StrategyContext } from '../../contexts/StrategyContextProvider';
 
 const AddLegs = () => {
   const inputHeaders = ["action", "strike", "premium", "type"];

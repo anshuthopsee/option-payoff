@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ToastContext } from "../Contexts/ToastContextProvider";
+import { ToastContext } from "../contexts/ToastContextProvider";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import Slide from "@mui/material/Slide";

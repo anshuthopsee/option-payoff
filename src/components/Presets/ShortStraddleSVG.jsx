@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { StrategyContext } from '../../Contexts/StrategyContextProvider';
+import { StrategyContext } from '../../contexts/StrategyContextProvider';
 
 const ShortStraddleSVG = () => {
   const { selectedPreset, selectPreset } = useContext(StrategyContext);

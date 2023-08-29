@@ -6,8 +6,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-import { CustomPresetsContext } from '../../Contexts/CustomPresetsContextProvider';
-import { ToastContext } from '../../Contexts/ToastContextProvider';
+import { CustomPresetsContext } from '../../contexts/CustomPresetsContextProvider';
+import { ToastContext } from '../../contexts/ToastContextProvider';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;

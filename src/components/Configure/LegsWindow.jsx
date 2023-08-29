@@ -10,7 +10,7 @@ import {
   GridRowEditStopReasons,
 } from '@mui/x-data-grid'
 import NoLegsOverlay from './NoLegsOverlay';
-import { StrategyContext } from '../../Contexts/StrategyContextProvider';
+import { StrategyContext } from '../../contexts/StrategyContextProvider';
 
 export default function LegsWindow({ legs }) {
 
@@ -29,11 +29,13 @@ export default function LegsWindow({ legs }) {
   };
 
   const handleRowSelectedModelChange = (newSelectionModel) => {
-    const updatedLegs = [...legs].map((leg) => {
-      leg.selected = newSelectionModel.includes(leg.id)
+    const deepCopyLegs = JSON.parse(JSON.stringify(legs));
+  
+    const updatedLegs = deepCopyLegs.map((leg) => {
+      leg.selected = newSelectionModel.includes(leg.id);
       return leg;
     });
-
+  
     updateLegs(updatedLegs);
   };
 

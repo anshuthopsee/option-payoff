@@ -35,8 +35,8 @@ const CustomPresetsContextProvider = ({ children }) => {
     const tobeDeleted = customPresets[index];
 
     if (tobeDeleted.name === selectedPreset.name) {
-      if (customPresets.length > 1) {
-        const precedingPresetIndex = index-1;
+      const precedingPresetIndex = index-1;
+      if (precedingPresetIndex > -1) {
         const precedingPresetName = customPresets[precedingPresetIndex].name;
         selectCustomPreset(precedingPresetName, precedingPresetIndex);
       } else {

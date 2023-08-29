@@ -14,6 +14,7 @@ An Option Payoff visualizing tool, that allows you to create strategies, add and
 2. Select/Unselect option legs with the checkbox.
 3. Save modified (custom) strategies as new, or update existing modified (custom) strategies.
 4. Persistence of saved strategies through local storage.
+5. Hash based routing, to select a strategy from the URL without hitting the server. (Example - https://anshuthopsee.github.io/option-payoff/#/Bull-Call-Spread). The strategy name is case sensitive and words should be joined with "-".
 
 ## To be added
 1. Zoom functionality for chart.
