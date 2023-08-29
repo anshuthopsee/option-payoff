@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { StrategyContext } from '../../Contexts/StrategyContextProvider';
 import { CustomPresetsContext } from '../../Contexts/CustomPresetsContextProvider';
-import { ToastContext } from '../../contexts/ToastContextProvider';
+import { ToastContext } from '../../Contexts/ToastContextProvider';
 import { Box, Typography, IconButton, Menu, MenuItem } from '@mui/material';
 import SaveNewDialog from './SaveNewDialog';
 import SaveIcon from '@mui/icons-material/Save';
