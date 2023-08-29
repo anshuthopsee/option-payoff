@@ -62,18 +62,13 @@ const usePathBasedPresetName = (initialState, setLegs) => {
     };
   }, []);
 
-  useUpdateEffect(() => {
-    window.addEventListener("popstate", handlePopState);
+  useEffect(() => {
+    window.onpopstate = handlePopState;
     const joinedWords = joinWords(selectedPreset.name);
     const hash = getHash();
     const presetName = splitWords(hash);
     if (selectedPreset.name !== presetName) {
-      console.log('presetName: ', presetName);
       history.pushState(presetName, document.title, document.URL.split('#')[0] + `#/${joinedWords}`);
-    };
-
-    return () => {
-      window.removeEventListener("popstate", handlePopState);
     };
   }, [selectedPreset]);
 
