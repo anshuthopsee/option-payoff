@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { StrategyContext } from '../../contexts/StrategyContextProvider';
+import { StrategyContext } from '../../Contexts/StrategyContextProvider';
 
 const BullPutSpreadSVG = () => {
   const { selectedPreset, selectPreset } = useContext(StrategyContext);

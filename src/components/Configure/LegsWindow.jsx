@@ -10,7 +10,7 @@ import {
   GridRowEditStopReasons,
 } from '@mui/x-data-grid'
 import NoLegsOverlay from './NoLegsOverlay';
-import { StrategyContext } from '../../contexts/StrategyContextProvider';
+import { StrategyContext } from '../../Contexts/StrategyContextProvider';
 
 export default function LegsWindow({ legs }) {
 

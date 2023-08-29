@@ -3,7 +3,7 @@ import LegsWindow from './LegsWindow';
 import Box from '@mui/material/Box';
 import Header from './Header';
 import AddLegs from './AddLegs'
-import { StrategyContext } from '../../contexts/StrategyContextProvider';
+import { StrategyContext } from '../../Contexts/StrategyContextProvider';
 
 const Configure = React.memo(({ darkMode }) => {
   const { legs } = useContext(StrategyContext);

@@ -1,5 +1,5 @@
 import { useRef, useContext } from 'react';
-import { StrategyContext } from '../../contexts/StrategyContextProvider';
+import { StrategyContext } from '../../Contexts/StrategyContextProvider';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import PayoffChart from './PayoffChart';

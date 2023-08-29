@@ -10,7 +10,7 @@ import Box from '@mui/material/Box';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import { DarkModeContext } from './contexts/DarkModeContextProvider';
-import StrategyContextProvider from './contexts/StrategyContextProvider';
+import StrategyContextProvider from './Contexts/StrategyContextProvider';
 import ToastContextProvider from './contexts/ToastContextProvider';
 import CustomPresetsContextProvider from './contexts/CustomPresetsContextProvider';
 import Chart from './components/Chart';

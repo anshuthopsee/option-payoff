@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useContext } from 'react';
-import { StrategyContext } from '../../contexts/StrategyContextProvider';
+import { StrategyContext } from '../../Contexts/StrategyContextProvider';
 import * as d3 from 'd3';
 
 const tooltipStyle = {

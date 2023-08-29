@@ -2,8 +2,8 @@ import { useContext } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import { StrategyContext } from '../../contexts/StrategyContextProvider';
-import { CustomPresetsContext } from '../../contexts/CustomPresetsContextProvider';
+import { StrategyContext } from '../../Contexts/StrategyContextProvider';
+import { CustomPresetsContext } from '../../Contexts/CustomPresetsContextProvider';
 import { ToastContext } from '../../contexts/ToastContextProvider';
 import CancelIcon from '@mui/icons-material/Close';
 

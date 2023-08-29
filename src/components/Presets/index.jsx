@@ -1,7 +1,7 @@
 import { memo, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { CustomPresetsContext } from '../../contexts/CustomPresetsContextProvider';
+import { CustomPresetsContext } from '../../Contexts/CustomPresetsContextProvider';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import ShortStraddleSVG from './ShortStraddleSVG'
