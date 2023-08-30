@@ -8,7 +8,8 @@ import {
   DataGrid,
   GridActionsCellItem,
   GridRowEditStopReasons,
-} from '@mui/x-data-grid'
+} from '@mui/x-data-grid';
+import CustomGridInputCell from './CustomGridInputCell';
 import NoLegsOverlay from './NoLegsOverlay';
 import { StrategyContext } from '../../Contexts/StrategyContextProvider';
 
@@ -100,6 +101,15 @@ export default function LegsWindow({ legs }) {
       sortable: false,
       flex: 0.15,
       editable: true,
+      renderEditCell: (params) => {
+        const isInEditMode = rowModesModel[params.id]?.mode === GridRowModes.Edit;
+        return (
+          <CustomGridInputCell
+            params={params}
+            isInEditMode={isInEditMode}
+          />
+        );
+      }
     },
     {
       field: 'premium',
@@ -110,6 +120,15 @@ export default function LegsWindow({ legs }) {
       sortable: false,
       flex: 0.15,
       editable: true,
+      renderEditCell: (params) => {
+        const isInEditMode = rowModesModel[params.id]?.mode === GridRowModes.Edit;
+        return (
+          <CustomGridInputCell
+            params={params}
+            isInEditMode={isInEditMode}
+          />
+        );
+      }
     },
     {
       field: 'type',
