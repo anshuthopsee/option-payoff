@@ -112,7 +112,7 @@ const AddLegs = () => {
           inputProps={{
             inputMode: 'numeric',
             pattern: '[0-9]*',
-            maxLength: 5,
+            maxLength: 4,
           }}
           size= "small"
           fullWidth
@@ -128,6 +128,7 @@ const AddLegs = () => {
           inputProps={{
             inputMode: 'numeric',
             pattern: '[0-9]*',
+            maxLength: 4,
           }}
           size= "small"
           fullWidth
