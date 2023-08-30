@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import useUpdateEffect from "./useUpdateEffect";
 import { PRESETS } from "../const/presets";
 import { splitWords, joinWords, getHash } from "./utils";
 
