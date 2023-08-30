@@ -61,7 +61,7 @@ export default function SaveNewDialog({ dialogOpen, setDialogOpen }) {
     <Dialog open={dialogOpen} onClose={handleClose} TransitionComponent={Transition}>
       <DialogTitle>Save new strategy</DialogTitle>
       <DialogContent sx={{ maxWidth: "440px" }}>
-        <Typography variant='body2' sx={{mb: "10px", color: "text.secondary"}}>Name cannot match exisiting names, or have any of [-"/] in it</Typography>
+        <Typography variant='body2' sx={{mb: "10px", color: "text.secondary"}}>Name cannot match an exisiting name, or have any of these [-"/] characters in it</Typography>
         <TextField
           autoFocus
           margin="dense"
