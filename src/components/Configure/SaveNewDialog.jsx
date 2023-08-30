@@ -61,7 +61,6 @@ export default function SaveNewDialog({ dialogOpen, setDialogOpen }) {
     <Dialog open={dialogOpen} onClose={handleClose} TransitionComponent={Transition}>
       <DialogTitle>Save new strategy</DialogTitle>
       <DialogContent sx={{ maxWidth: "440px" }}>
-        <Typography variant='body2' sx={{mb: "5x", color: "text.secondary"}}>Max length - 17 characters</Typography>
         <Typography variant='body2' sx={{mb: "10px", color: "text.secondary"}}>Name cannot match exisiting names, or have any of [-"/] in it</Typography>
         <TextField
           autoFocus
@@ -75,7 +74,7 @@ export default function SaveNewDialog({ dialogOpen, setDialogOpen }) {
           onChange={handleChange}
           focused
           inputProps={{
-            maxLength: 17
+            maxLength: 30
           }}
         />
       </DialogContent>

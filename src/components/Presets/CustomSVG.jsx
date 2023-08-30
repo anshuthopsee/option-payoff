@@ -61,7 +61,11 @@ const CustomSVG = ({ name, index }) => {
         <line x1="0" y1="0" x2="0" y2="100" stroke="#c9c7c7" strokeWidth="1" />
   
       </svg>
-      <Typography variant='body2' sx={{ position: "absolute", bottom: "7px", fontSize: "11px" }}>{`${name}`}</Typography>
+      <div style={{ position: "absolute", bottom: "7px", display: "flex", maxWidth: "80px", height: "fit-content", flexWrap: "wrap"}}>
+        <Typography variant='body2' sx={{ fontSize: "11px", maxWidth: "100%", wordWrap: "break-word" }}>
+          {`${name}`}
+        </Typography>
+      </div>
     </Box>
   );
 };
