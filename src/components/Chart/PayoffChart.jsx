@@ -53,27 +53,6 @@ const generatePayoffDiagram = (legs) => {
   return data;
 };
 
-const splitLines = (data) => { 
-  let currentSegment = [];
-  const segments = [];
-  const thresholdDistance = 1;
-  for (let i = 0; i < data.length; i++) {
-    currentSegment.push(data[i]);
-
-    if (i < data.length - 1) {
-      const distance = Math.abs(data[i + 1].x - data[i].x);
-
-      if (distance >= thresholdDistance) {
-        segments.push(currentSegment);
-        currentSegment = [];
-      }
-    } else {
-      segments.push(currentSegment);
-    };
-  };
-  return segments;
-};
-
 const PayoffChart = () => {
   const chartParentRef = useRef();
   const chartAreaRef = useRef();
@@ -119,31 +98,17 @@ const PayoffChart = () => {
       .domain(0)
       .range([0, WIDTH])
 
-    const line = d3.line()
+    const positiveLine = d3.line()
       .x(d => xScale(d.x))
-      .y(d => yScale(d.y))
+      .y(d => Math.max(yScale(d.y), 0))
+      .defined(d => d.y >= 0);
 
-    const positiveData = data.filter((d) => d.y >= 0);
-    const negativeData = data.filter((d) => d.y < 0);
-
-    const positiveLines = splitLines(positiveData);
-    const negativeLines = splitLines(negativeData);
-
-    positiveLines.forEach(positiveLine => {
-      svg.append("path")
-        .attr("d", line(positiveLine))
-        .attr("stroke", "#32CD32")
-        .attr("stroke-width", 2)
-        .attr("fill", "none");
-    });
-
-    negativeLines.forEach(negativeLine => {
-      svg.append("path")
-        .attr("d", line(negativeLine))
-        .attr("stroke", "red")
-        .attr("stroke-width", 2)
-        .attr("fill", "none");
-    });
+    svg.append("path")
+      .datum(data)
+      .attr("d", positiveLine)
+      .attr("stroke", "#32CD32")
+      .attr("stroke-width", 2)
+      .attr("fill", "none");
 
     const insideArea = d3.area()
       .x(d => xScale(d.x))
@@ -156,6 +121,30 @@ const PayoffChart = () => {
       .attr("d", insideArea)
       .attr("fill", "#90de97")
       .attr("fill-opacity", 0.3)
+
+      const negativeLine = d3.line()
+      .x(d => xScale(d.x))
+      .y(d => yScale(d.y))
+      .defined(d => d.y < 0);
+
+    svg.append("path")
+      .datum(data)
+      .attr("d", negativeLine)
+      .attr("stroke", "red")
+      .attr("stroke-width", 2)
+      .attr("fill", "none");
+    
+    const outsideArea = d3.area()
+      .x(d => xScale(d.x))
+      .y0(yScale(Math.min(d3.max(data, d => d.y), 0)))
+      .y1(d => yScale(d.y))
+      .defined(d => d.y < 0);
+    
+    svg.append("path")
+      .datum(data)
+      .attr("d", outsideArea)
+      .attr("fill", "#e36c64")
+      .attr("fill-opacity", 0.3);
 
     const maxTicks = Math.floor(WIDTH / 70);
 
@@ -174,18 +163,6 @@ const PayoffChart = () => {
       .attr('stroke-dasharray', '12 12')
       .attr("stroke-width", "2px")
       .call(d3.axisBottom(xZeroLine));
-    
-    const outsideArea = d3.area()
-      .x(d => xScale(d.x))
-      .y0(yScale(Math.min(d3.max(data, d => d.y), 0)))
-      .y1(d => yScale(d.y))
-      .defined(d => d.y < 0);
-    
-    svg.append("path")
-      .datum(data)
-      .attr("d", outsideArea)
-      .attr("fill", "#e36c64")
-      .attr("fill-opacity", 0.3)
 
     const drawBreakEvenLine = (breakEven) => {
       breakEven = Math.round(breakEven);
@@ -205,9 +182,9 @@ const PayoffChart = () => {
 
     let prevBreakEven = null;
     const sortedData = [...data].sort((a, b) => a.x - b.x);
-    sortedData.forEach(d => {
+    sortedData.forEach((d, i) => {
       if (Math.round(d.y) === 0) {
-        if (prevBreakEven === null || Math.abs(d.x - prevBreakEven) >= 1) {
+        if (prevBreakEven === null || (Math.abs(d.x - prevBreakEven) >= 1 && d.y !== sortedData[i+1]?.y)) {
           drawBreakEvenLine(d.x);
           prevBreakEven = d.x;
         };

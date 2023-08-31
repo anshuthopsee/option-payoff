@@ -34,7 +34,7 @@ const AddLegs = () => {
         return ''
       };
 
-      if (!isNaN(parsedValue)) {
+      if (!isNaN(parsedValue) && parsedValue < 10000) {
         return value;
       };
 
@@ -49,7 +49,7 @@ const AddLegs = () => {
     });
   };
   
-  const handleQtyChange = (e) => {
+  const hanldePremiumChange = (e) => {
     const { value } = e.target;
 
     setPremium((prevState) => {
@@ -64,8 +64,8 @@ const AddLegs = () => {
         id: id, 
         type: type, 
         action: action, 
-        strike: strike, 
-        premium: premium,
+        strike: Number(strike), 
+        premium: Number(premium),
         selected: true
       }
     ];
@@ -111,8 +111,7 @@ const AddLegs = () => {
           defaultValue={undefined}
           inputProps={{
             inputMode: 'numeric',
-            pattern: '[0-9]*',
-            maxLength: 4,
+            pattern: '[0-9]*'
           }}
           size= "small"
           fullWidth
@@ -122,13 +121,12 @@ const AddLegs = () => {
       return (
         <TextField 
           label={"Premium"}
-          onChange={handleQtyChange}
+          onChange={hanldePremiumChange}
           value={premium}
           defaultValue={undefined}
           inputProps={{
             inputMode: 'numeric',
-            pattern: '[0-9]*',
-            maxLength: 4,
+            pattern: '[0-9]*'
           }}
           size= "small"
           fullWidth
