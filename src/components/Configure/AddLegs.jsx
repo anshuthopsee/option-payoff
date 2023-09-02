@@ -29,16 +29,14 @@ const AddLegs = () => {
   };
 
   const numberValidator = (value, prevState) => {
+    value = value.replace(/^0+/, '0');
     const parsedValue = Number(value);
-      if (value.charAt(0) === "0") {
-        return ''
-      };
 
-      if (!isNaN(parsedValue) && parsedValue < 10000) {
-        return value;
-      };
+    if (!isNaN(parsedValue) && (parsedValue === 0 || (parsedValue >= 0.1 && parsedValue < 10000))) {
+      return value;
+    };
 
-      return prevState;
+    return prevState;
   };
 
   const handleStrikeChange = (e) => {

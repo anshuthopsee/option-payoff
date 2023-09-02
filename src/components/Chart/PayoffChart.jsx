@@ -8,11 +8,15 @@ const tooltipStyle = {
   padding: "2px 4px",
   width: "auto",
   background: "#3b87eb",
+  flexWrap: "wrap",
   color: "white",
   fontSize: "12px",
   borderRadius: "2px",
-  whiteSpace: "pre-line",
-  overflowWrap: "wrap",
+  whiteSpace: "normal",
+  overflow: "auto",
+  overflowWrap: "break-word",
+  whiteSpace: "pre-wrap",
+  wordWrap: "break-word"
 }
 
 const calculatePayoff = (underlyingPrice, leg) => {
@@ -28,27 +32,34 @@ const calculatePayoff = (underlyingPrice, leg) => {
       payoff = position * (Math.max(strike - underlyingPrice, 0) - premium);
   };
   return payoff;
-}
+};
+
+const roundToNearestPowerOfTen = (number) => {
+  const powerOfTen = Math.pow(10, Math.floor(Math.log10(number)));
+  const roundedNumber = Math.round(number / powerOfTen) * powerOfTen;
+  return roundedNumber;
+};
 
 const generatePayoffDiagram = (legs) => {
   const minStrike = Math.min(...legs.map(leg => leg.strike));
   const maxStrike = Math.max(...legs.map(leg => leg.strike));
   const avgStrike = (maxStrike + minStrike) / 2
-  const startStrike = minStrike - (avgStrike / 2)
-  const endStrike = maxStrike + (avgStrike / 2)
-  const numPoints = 400;
+  const startStrike = Math.max(minStrike - avgStrike / 2, 0);
+  const endStrike = maxStrike + (avgStrike / 2);
   
   const data = [];
 
-  for (let i = 0; i < numPoints; i++) {
-      const underlyingPrice = startStrike + (endStrike - startStrike) * i / (numPoints - 1);
-      let totalPayoff = 0;
+  let i;
+  for (i = startStrike; i < endStrike;) {
+    const underlyingPrice = i
+    let totalPayoff = 0;
 
-      for (const leg of legs) {
-          const legPayoff = calculatePayoff(underlyingPrice, leg);
-          totalPayoff += legPayoff;
-      };
-      data.push({ x: underlyingPrice, y: totalPayoff });
+    for (const leg of legs) {
+        const legPayoff = calculatePayoff(underlyingPrice, leg);
+        totalPayoff += legPayoff;
+    };
+    data.push({ x: underlyingPrice, y: totalPayoff });
+    i+= roundToNearestPowerOfTen(endStrike)/400;
   };
   return data;
 };
@@ -114,7 +125,7 @@ const PayoffChart = () => {
       .x(d => xScale(d.x))
       .y0(yScale(Math.max(d3.min(data, d => d.y), 0)))
       .y1(d => Math.max(yScale(d.y), 0))
-      .defined(d => d.y > 0);
+      .defined(d => d.y >= 0);
     
     svg.append("path")
       .datum(data)
@@ -122,10 +133,10 @@ const PayoffChart = () => {
       .attr("fill", "#90de97")
       .attr("fill-opacity", 0.3)
 
-      const negativeLine = d3.line()
+    const negativeLine = d3.line()
       .x(d => xScale(d.x))
       .y(d => yScale(d.y))
-      .defined(d => d.y < 0);
+      .defined(d => d.y <= 0);
 
     svg.append("path")
       .datum(data)
@@ -138,7 +149,7 @@ const PayoffChart = () => {
       .x(d => xScale(d.x))
       .y0(yScale(Math.min(d3.max(data, d => d.y), 0)))
       .y1(d => yScale(d.y))
-      .defined(d => d.y < 0);
+      .defined(d => d.y <= 0);
     
     svg.append("path")
       .datum(data)
@@ -151,11 +162,11 @@ const PayoffChart = () => {
     svg.append('g')
       .attr('class', 'x-axis')
       .attr('transform', `translate(0, ${HEIGHT})`)
-      .call(d3.axisBottom(xScale).ticks(maxTicks));
+      .call(d3.axisBottom(xScale).ticks(maxTicks).tickFormat(d3.format("~s")));
 
     svg.append('g')
       .attr('class', 'y-axis')
-      .call(d3.axisLeft(yScale));
+      .call(d3.axisLeft(yScale).ticks(5).tickFormat(d3.format("~s")));
 
     svg.append('g')
       .attr('class', 'x-axis-zero')
@@ -180,16 +191,15 @@ const PayoffChart = () => {
         .attr("stroke-dasharray", "12 12");
     };
 
-    let prevBreakEven = null;
-    const sortedData = [...data].sort((a, b) => a.x - b.x);
-    sortedData.forEach((d, i) => {
-      if (Math.round(d.y) === 0) {
-        if (prevBreakEven === null || (Math.abs(d.x - prevBreakEven) >= 1 && d.y !== sortedData[i+1]?.y)) {
-          drawBreakEvenLine(d.x);
-          prevBreakEven = d.x;
+    for (let i = 0; i < data.length; i++) {
+      if (i > 0) {
+        const currItem = data[i];
+        const prevItem = data[i-1];
+        if ((currItem.y < 0 && prevItem.y >= 0) || (currItem.y > 0 && prevItem.y <= 0)) {
+          drawBreakEvenLine(prevItem.x);
         };
       };
-    });
+    };
         
     const crosshairVertical = svg
     .append("line")
@@ -208,8 +218,10 @@ const PayoffChart = () => {
     const onMouseMove = (e) => {
       e.preventDefault();
         const [x, y] = d3.pointers(e)[0];
-        const underlyingPrice = Math.round(xScale.invert(x));
-        const payoff = Math.round(yScale.invert(y));
+        const xInverted = xScale.invert(x);
+        const yInverted = yScale.invert(y);
+        const underlyingPrice = Math.abs(xInverted) < 1 ? xScale.invert(x).toFixed(2) : Math.round(xScale.invert(x));
+        const payoff = Math.abs(yInverted) < 1 ? yScale.invert(y).toFixed(2) : Math.round(yScale.invert(y));
         
         const xTooltip = document.getElementById("x-axis-tooltip");
         const yTooltip = document.getElementById("y-axis-tooltip");
@@ -227,18 +239,27 @@ const PayoffChart = () => {
         .attr("y1", y)
         .attr("y2", y)
 
-        xTooltip.style.display = "block";
-        xTooltip.textContent = underlyingPrice ? underlyingPrice : 0;
+        xTooltip.style.display = "inline";
+
+        if (!isNaN(underlyingPrice)) {
+          const formattedPrice = Math.abs(underlyingPrice) >= 1000
+              ? d3.format(".3s")(underlyingPrice)
+              : underlyingPrice;
+          xTooltip.textContent = formattedPrice;
+        } else {
+            xTooltip.textContent = 0;
+        };
+
         const adjustedX = x + Math.max(MARGIN.LEFT, xTooltip.clientWidth / 2) - Math.min(MARGIN.RIGHT, xTooltip.clientWidth / 2) + 10;
         xTooltip.style.left = (adjustedX) + "px";
         xTooltip.style.top = HEIGHT + 147 + "px";
 
-        yTooltip.style.display = "block";
-        yTooltip.textContent = payoff;
-        const adjustedY = 50 - yTooltip.clientWidth
+        yTooltip.style.display = "inline";
+        yTooltip.textContent = payoff ? Math.abs(payoff) >= 1000 ? d3.format(".3s")(payoff) : payoff : 0
+        const adjustedY = 53 - yTooltip.clientWidth
         yTooltip.style.left = adjustedY + "px";
         yTooltip.style.top = y + 127 + "px";
-    }
+    };
 
     const onMouseOut = (e) => {
       e.preventDefault();
