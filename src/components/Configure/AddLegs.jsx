@@ -29,11 +29,15 @@ const AddLegs = () => {
   };
 
   const numberValidator = (value, prevState) => {
-    value = value.replace(/^0+/, '0');
+    value = value.replace(/^0+/, '0').trim(" ");
     const parsedValue = Number(value);
 
+    const [integer, decimal] = value.split('.');
+
     if (!isNaN(parsedValue) && (parsedValue === 0 || (parsedValue >= 0.1 && parsedValue < 10000))) {
-      return value;
+      if (integer !== "0" || (decimal?.charAt(0) !== "0" && decimal?.charAt(1) !== "0")) {
+        return value;
+      };
     };
 
     return prevState;

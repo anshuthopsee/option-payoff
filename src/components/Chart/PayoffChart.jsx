@@ -41,6 +41,8 @@ const roundToNearestPowerOfTen = (number) => {
 };
 
 const generatePayoffDiagram = (legs) => {
+  if (legs.length === 0) return [{x: 0, y: 0}];
+  
   const minStrike = Math.min(...legs.map(leg => leg.strike));
   const maxStrike = Math.max(...legs.map(leg => leg.strike));
   const avgStrike = (maxStrike + minStrike) / 2
@@ -196,7 +198,11 @@ const PayoffChart = () => {
         const currItem = data[i];
         const prevItem = data[i-1];
         if ((currItem.y < 0 && prevItem.y >= 0) || (currItem.y > 0 && prevItem.y <= 0)) {
-          drawBreakEvenLine(prevItem.x);
+          if (Math.abs(currItem.y) <= Math.abs(prevItem.y)) {
+            drawBreakEvenLine(currItem.x);
+          } else if (Math.abs(currItem.y) > Math.abs(prevItem.y)) {
+            drawBreakEvenLine(prevItem.x);
+          }
         };
       };
     };

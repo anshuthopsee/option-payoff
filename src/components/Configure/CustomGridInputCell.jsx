@@ -5,7 +5,7 @@ const CustomGridInputCell = ({ params, isInEditMode }) => {
   const handleInput = (e) => {
     const { value } = e.target;
 
-    if (e.target.value === '') {
+    if (value === '') {
       e.target.value = 0;
     };
   
@@ -14,15 +14,17 @@ const CustomGridInputCell = ({ params, isInEditMode }) => {
       e.target.value = updatedValue;
     };
 
-    if (parseFloat(value) >= 10000) {
+    const numericValue = parseFloat(value);
+
+    if (numericValue >= 10000) {
       const updatedValue = value.slice(0, -1);
       e.target.value = updatedValue;
     };
   
-    if (parseFloat(value) < 0.1 && value.includes('.')) {
-      const [integerPart, decimalPart] = value.split('.');
-      if (decimalPart.length > 1) {
-        const updatedValue = `${integerPart}.${decimalPart.slice(0, 1)}`;
+    if (numericValue < 0.1 && value.includes('.')) {
+      const [integer, decimal] = value.split('.');
+      if (decimal.length > 0) {
+        const updatedValue = e.target.value.slice(0, 1);
         e.target.value = updatedValue;
       };
     };
