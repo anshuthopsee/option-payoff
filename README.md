@@ -12,12 +12,14 @@ An Option Payoff visualizing tool, that allows you to create strategies, add and
 ## Features
 1. Edit/Delete option legs with their respective buttons.
 2. Select/Unselect option legs with the checkbox.
-3. Save modified (custom) strategies as new, or update existing modified (custom) strategies.
+3. Save modified (custom) strategies as new, or update saved strategies.
 4. Persistence of saved strategies through local storage.
-5. Hash based routing, to select a strategy from the URL without hitting the server. (Example - https://anshuthopsee.github.io/option-payoff/#/Bull-Call-Spread). The strategy name is case sensitive and words should be joined with "-".
+5. Hash routing, to select a strategy from the URL without hitting the server (Example - https://anshuthopsee.github.io/option-payoff/#/Bull-Call-Spread). The strategy name is case sensitive and all the words should be joined with "-" (hyphen).
+6. Numeric input value range: 0.1 >= value < 10000.
 
 ## To be added
-1. Zoom functionality for chart.
+1. Number of contracts input.
+2. Zoom functionality for chart.
 
 ## Site link
 ## https://anshuthopsee.github.io/option-payoff/
