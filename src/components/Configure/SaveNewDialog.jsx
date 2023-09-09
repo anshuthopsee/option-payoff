@@ -27,11 +27,12 @@ export default function SaveNewDialog({ dialogOpen, setDialogOpen }) {
   };
 
   const handleChange = (e) => {
-    const { value } = e.target;
-    if (value.includes("-")) return;
-    if (value.includes('"')) return;
-    if (value.includes("/")) return;
-    setStrategyName(value);
+    const { value } = e.target; 
+    const format = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+
+    if (!format.test(value)) {
+      setStrategyName(value);
+    };
 
     const nameExists = !customPresets.every((preset) => preset.name !== value)
     || Object.keys(PRESETS).includes(value);
@@ -45,7 +46,8 @@ export default function SaveNewDialog({ dialogOpen, setDialogOpen }) {
 
   const handleSave = () => {
     if (strategyName) {
-      saveNewCustomPreset(strategyName);
+      const nameWithoutExtraSpaces = strategyName.trim().replace(/ +/g, ' ');
+      saveNewCustomPreset(nameWithoutExtraSpaces);
       setDialogOpen(false);
       setStrategyName("");
       toggleToast({
@@ -53,15 +55,15 @@ export default function SaveNewDialog({ dialogOpen, setDialogOpen }) {
         severity: "success",
         message: `New strategy "${strategyName}" saved.`,
         key: new Date().getTime()
-      })
+      });
     };
   };
 
   return (
     <Dialog open={dialogOpen} onClose={handleClose} TransitionComponent={Transition}>
       <DialogTitle>Save new strategy</DialogTitle>
-      <DialogContent sx={{ maxWidth: "440px" }}>
-        <Typography variant='body2' sx={{mb: "10px", color: "text.secondary"}}>Name cannot match an exisiting name, or have any of these [-"/] characters in it</Typography>
+      <DialogContent sx={{ maxWidth: "395px" }}>
+        <Typography variant='body2' sx={{mb: "10px", color: "text.secondary"}}>Name cannot match an existing name or have special characters in it.</Typography>
         <TextField
           autoFocus
           margin="dense"
