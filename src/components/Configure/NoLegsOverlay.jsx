@@ -66,7 +66,7 @@ function NoLegsOverlay() {
           </g>
         </g>
       </svg>
-      <Box sx={{ mt: 1 }}>No Legs</Box>
+      <Box sx={{ mt: 1 }}>No legs</Box>
     </StyledGridOverlay>
   );
 };
