@@ -1,5 +1,6 @@
 {
   "name": "option-payoff",
+  "homepage": "https://anshuthopsee.github.io/option-payoff/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -19,7 +20,8 @@
     "@mui/x-data-grid": "^6.11.0",
     "d3": "^7.8.5",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.17.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.14",

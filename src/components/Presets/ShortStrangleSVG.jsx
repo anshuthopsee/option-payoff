@@ -1,9 +1,11 @@
 import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { StrategyContext } from '../../Contexts/StrategyContextProvider';
 
 const ShortStrangleSVG = () => {
+  const navigate = useNavigate();
   const { selectedPreset, selectPreset } = useContext(StrategyContext);
   const isSelected = () => {
     if (selectedPreset.name === "Short Strangle" && !selectedPreset.custom) {
@@ -28,7 +30,7 @@ const ShortStrangleSVG = () => {
         justifyContent: "center" 
       }
     }
-      onClick={() => selectPreset("Short Strangle")}
+      onClick={() => navigate("/Short-Strangle")}
     >
       <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         {/* Background */}

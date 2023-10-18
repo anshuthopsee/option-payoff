@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
+import { getPathName } from "./utils";
 import { PRESETS } from "../const/presets";
 import { splitWords, joinWords, getHash } from "./utils";
 
-const getSelectedPreset = (defaultPresetName) => {
-  const hash = getHash();
-  if (!hash) return { name: defaultPresetName, custom: false };
+const getSelectedPreset = (defaultPresetName, pathName) => {
+  if (!pathName) return { name: defaultPresetName, custom: false };
 
-  const pathName = splitWords(hash);
+  pathName = splitWords(pathName);
   const inPresets = Object.keys(PRESETS).includes(pathName);
   if (inPresets) {
     return { name: pathName, custom: false }
@@ -30,15 +31,18 @@ const getCustomPresetLegs = (presetName) => {
     for (const preset of customPresets) {
       if (preset.name === presetName) {
         return preset.legs;
-      }
+      };
     };
   };
   return null;
 };
 
 const usePathBasedPresetName = (initialState, setLegs) => {
+  const location = useLocation();
+  const pathName = getPathName(location);
+
   const firstRender = useRef(true);
-  const [selectedPreset, setSelectedPreset] = useState(() => getSelectedPreset(initialState.name));
+  const [selectedPreset, setSelectedPreset] = useState(() => getSelectedPreset(initialState.name, pathName));
 
   const handlePopState = () => {
     const preset = getSelectedPreset(selectedPreset.name);
@@ -54,22 +58,10 @@ const usePathBasedPresetName = (initialState, setLegs) => {
   };
 
   useEffect(() => {
-    if (firstRender.current) {
-      const joinedWords = joinWords(selectedPreset.name);
-      history.replaceState(selectedPreset.name, document.title, document.URL.split('#')[0] + `#/${joinedWords}`);
-      firstRender.current = false;
+    if (pathName && pathName !== selectedPreset.name) {
+      setSelectedPreset(getSelectedPreset(initialState.name, pathName));
     };
-  }, []);
-
-  useEffect(() => {
-    window.onpopstate = handlePopState;
-    const joinedWords = joinWords(selectedPreset.name);
-    const hash = getHash();
-    const presetName = splitWords(hash);
-    if (selectedPreset.name !== presetName) {
-      history.pushState(presetName, document.title, document.URL.split('#')[0] + `#/${joinedWords}`);
-    };
-  }, [selectedPreset]);
+  }, [pathName]);
 
   return [selectedPreset, setSelectedPreset];
 };

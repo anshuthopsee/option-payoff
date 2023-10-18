@@ -22,3 +22,14 @@ export const getHash = () => {
     return inputText;
   };
 };
+
+export const getPathName = (location) => {
+  let pathName = location.pathname.slice(1);
+  const indexOfSlash = pathName.indexOf('/');
+  
+  if (indexOfSlash !== -1) {
+    pathName =  pathName.slice(0, indexOfSlash);
+  };
+  pathName = splitWords(pathName);
+  return pathName;
+};

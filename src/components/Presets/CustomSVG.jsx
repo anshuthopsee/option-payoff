@@ -1,4 +1,6 @@
 import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { joinWords } from '../../hooks/utils';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -8,6 +10,7 @@ import { ToastContext } from '../../Contexts/ToastContextProvider';
 import CancelIcon from '@mui/icons-material/Close';
 
 const CustomSVG = ({ name, index }) => {
+  const navigate = useNavigate();
   const { selectedPreset } = useContext(StrategyContext);
   const { deleteCustomPreset, selectCustomPreset } = useContext(CustomPresetsContext);
   const { toggleToast } = useContext(ToastContext);
@@ -47,7 +50,7 @@ const CustomSVG = ({ name, index }) => {
         justifyContent: "center" 
       }
     }
-      onClick={() => selectCustomPreset(name, index)}
+      onClick={() => navigate(`/${joinWords(name)}`)}
     >
       <IconButton sx={{ position: 'absolute', top: "0px", right: "0px" }} onClick={handleDeleteClick}>
         <CancelIcon/>

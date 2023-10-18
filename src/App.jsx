@@ -1,4 +1,5 @@
-import { useContext, useState, useEffect } from 'react'
+import { useContext, useState, useEffect } from 'react';
+import { useLocation } from "react-router-dom";
 import createTheme from '@mui/material/styles/createTheme';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -87,6 +88,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      {console.log("App.js rendered")}
       <ToastContextProvider>
         <CssBaseline />
         <AppBar {...appBarStyles} elevation={0}>

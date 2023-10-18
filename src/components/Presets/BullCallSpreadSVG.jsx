@@ -1,9 +1,11 @@
 import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { StrategyContext } from '../../Contexts/StrategyContextProvider';
 
 const BullCallSpreadSVG = () => {
+  const navigate = useNavigate();
   const { selectedPreset, selectPreset } = useContext(StrategyContext);
 
   const isSelected = () => {
@@ -29,7 +31,7 @@ const BullCallSpreadSVG = () => {
         justifyContent: "center" 
       }
     }
-      onClick={() => selectPreset("Bull Call Spread")}
+      onClick={() => navigate("/Bull-Call-Spread")}
     >
       <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         {/* Background */}
