@@ -20,7 +20,7 @@ const getLegs = (defaultPresetName, pathName) => {
       };
     };
     return PRESETS[defaultPresetName];
-  }
+  };
   return PRESETS[defaultPresetName];
 };
 
