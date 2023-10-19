@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { PRESETS } from "../const/presets";
-import { splitWords, getHash, getPathName } from "./utils";
+import { splitWords, getPathName } from "./utils";
 
 const getLegs = (defaultPresetName, pathName) => {
   if (!pathName) return PRESETS[defaultPresetName];

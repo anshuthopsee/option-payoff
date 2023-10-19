@@ -10,19 +10,6 @@ export const splitWords = (hyphenSeparatedString) => {
   return lowercaseWords.join(' ');
 };
 
-export const getHash = () => {
-  let inputText = window.location.hash;
-  if (inputText === "") return "";
-  inputText = inputText.slice(2)
-  const indexOfSlash = inputText.indexOf('/');
-  
-  if (indexOfSlash !== -1) {
-    return inputText.slice(0, indexOfSlash);
-  } else {
-    return inputText;
-  };
-};
-
 export const getPathName = (location) => {
   let pathName = location.pathname.slice(1);
   const indexOfSlash = pathName.indexOf('/');

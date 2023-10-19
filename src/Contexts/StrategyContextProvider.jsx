@@ -15,16 +15,6 @@ const StrategyContextProvider = ({ children }) => {
       name: defaultPresetName,
       custom: false
     }, setLegs);
-  
-  const selectPreset = (presetName, custom=false) => {
-    setSelectedPreset(
-      {
-        name: presetName,
-        custom: custom
-      }
-    );
-    setLegs(PRESETS[presetName]);
-  };
 
   const updateLegs = (updatedLegs) => {
     if (updatedLegs.length <= 10) {
@@ -33,7 +23,7 @@ const StrategyContextProvider = ({ children }) => {
   };
 
   return (
-    <StrategyContext.Provider value={{ legs, updateLegs, selectedPreset, setSelectedPreset, selectPreset}}>
+    <StrategyContext.Provider value={{ legs, updateLegs, selectedPreset }}>
       {children}
     </StrategyContext.Provider>
   );

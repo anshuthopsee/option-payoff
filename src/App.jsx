@@ -88,7 +88,6 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      {console.log("App.js rendered")}
       <ToastContextProvider>
         <CssBaseline />
         <AppBar {...appBarStyles} elevation={0}>

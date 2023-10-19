@@ -12,15 +12,11 @@ import CancelIcon from '@mui/icons-material/Close';
 const CustomSVG = ({ name, index }) => {
   const navigate = useNavigate();
   const { selectedPreset } = useContext(StrategyContext);
-  const { deleteCustomPreset, selectCustomPreset } = useContext(CustomPresetsContext);
+  const { deleteCustomPreset } = useContext(CustomPresetsContext);
   const { toggleToast } = useContext(ToastContext);
 
   const isSelected = () => {
-    if (selectedPreset.name === name && selectedPreset.custom) {
-      return true;
-    } else {
-      return false;
-    };
+    return (selectedPreset.name === name && selectedPreset.custom);
   };
 
   const handleDeleteClick = (e) => {

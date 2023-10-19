@@ -6,14 +6,10 @@ import { StrategyContext } from '../../Contexts/StrategyContextProvider';
 
 const BullCallSpreadSVG = () => {
   const navigate = useNavigate();
-  const { selectedPreset, selectPreset } = useContext(StrategyContext);
+  const { selectedPreset } = useContext(StrategyContext);
 
   const isSelected = () => {
-    if (selectedPreset.name === "Bull Call Spread" && !selectedPreset.custom) {
-      return true;
-    } else {
-      return false;
-    };
+    return (selectedPreset.name === "Bull Call Spread" && !selectedPreset.custom);
   };
 
   return (

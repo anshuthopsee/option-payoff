@@ -2,6 +2,7 @@ import { useContext, createContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { StrategyContext } from './StrategyContextProvider';
+
 export const CustomPresetsContext = createContext();
 
 const CustomPresetsContextProvider = ({ children }) => {
@@ -9,10 +10,7 @@ const CustomPresetsContextProvider = ({ children }) => {
   const [customPresets, setCustomPresets] = useLocalStorage("customPresets", []);
   const { 
     selectedPreset, 
-    selectPreset, 
-    setSelectedPreset, 
-    legs, 
-    updateLegs 
+    legs,
   } = useContext(StrategyContext);
 
   const saveNewCustomPreset = (name) => {
@@ -30,7 +28,7 @@ const CustomPresetsContextProvider = ({ children }) => {
     const updatedPreset = { name: selectedPreset.name, legs: legs }
     setCustomPresets(
       customPresets.map((preset) => (preset.name === selectedPreset.name) ? updatedPreset : preset)
-    )
+    );
   };
 
   const deleteCustomPreset = (index) => {
@@ -48,23 +46,12 @@ const CustomPresetsContextProvider = ({ children }) => {
     setCustomPresets(customPresets.filter((preset, i) => index !== i))
   };
 
-  const selectCustomPreset = (presetName, customPresetIndex) => {
-    setSelectedPreset(
-      {
-        name: presetName, 
-        custom: true
-      }
-    );
-    updateLegs(customPresets[customPresetIndex].legs);
-  };
-
   const value = {
     customPresets: customPresets,
     setCustomPresets: setCustomPresets,
     deleteCustomPreset: deleteCustomPreset,
     saveCustomPreset: saveCustomPreset,
     saveNewCustomPreset: saveNewCustomPreset,
-    selectCustomPreset: selectCustomPreset
   };
 
   return (

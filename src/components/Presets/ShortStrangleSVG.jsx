@@ -6,13 +6,9 @@ import { StrategyContext } from '../../Contexts/StrategyContextProvider';
 
 const ShortStrangleSVG = () => {
   const navigate = useNavigate();
-  const { selectedPreset, selectPreset } = useContext(StrategyContext);
+  const { selectedPreset } = useContext(StrategyContext);
   const isSelected = () => {
-    if (selectedPreset.name === "Short Strangle" && !selectedPreset.custom) {
-      return true;
-    } else {
-      return false;
-    };
+    return (selectedPreset.name === "Short Strangle" && !selectedPreset.custom);
   };
 
   return (
