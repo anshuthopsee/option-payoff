@@ -14,7 +14,7 @@ An Option Payoff visualizing tool, that allows you to create strategies, add and
 2. Select/Unselect option legs with the checkbox.
 3. Save modified (custom) strategies as new, or update saved strategies.
 4. Persistence of saved strategies through local storage.
-5. URL based routing, to select a strategy from the URL with 404 error mitigation. (Example - https://anshuthopsee.github.io/option-payoff/Bull-Call-Spread). The strategy name is case sensitive and all the words should be joined with "-" (hyphen).
+5. Hash routing, to select a strategy from the URL without throwing a 404 error. (Example - https://anshuthopsee.github.io/option-payoff/#/Bull-Call-Spread). The strategy name is case sensitive and all the words should be joined with "-" (hyphen).
 6. Numeric input value range: 0.1 >= value < 10000.
 
 ## To be added

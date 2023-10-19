@@ -38,9 +38,9 @@ const CustomPresetsContextProvider = ({ children }) => {
       const precedingPresetIndex = index-1;
       if (precedingPresetIndex > -1) {
         const precedingPresetName = customPresets[precedingPresetIndex].name;
-        navigate(`/${precedingPresetName}`);
+        navigate(`#/${precedingPresetName}`);
       } else {
-        navigate("/Bull-Put-Spread");
+        navigate("#/Bull-Put-Spread");
       };
     };
     setCustomPresets(customPresets.filter((preset, i) => index !== i))

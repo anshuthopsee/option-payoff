@@ -11,7 +11,7 @@ export const splitWords = (hyphenSeparatedString) => {
 };
 
 export const getPathName = (location) => {
-  let pathName = location.pathname.slice(1);
+  let pathName = location.hash.slice(2);
   const indexOfSlash = pathName.indexOf('/');
   
   if (indexOfSlash !== -1) {

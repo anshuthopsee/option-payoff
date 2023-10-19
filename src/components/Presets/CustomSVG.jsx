@@ -46,7 +46,7 @@ const CustomSVG = ({ name, index }) => {
         justifyContent: "center" 
       }
     }
-      onClick={() => navigate(`/${joinWords(name)}`)}
+      onClick={() => navigate(`#/${joinWords(name)}`)}
     >
       <IconButton sx={{ position: 'absolute', top: "0px", right: "0px" }} onClick={handleDeleteClick}>
         <CancelIcon/>
