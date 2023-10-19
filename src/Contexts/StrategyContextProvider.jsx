@@ -9,12 +9,12 @@ const defaultPresetName = "Short Straddle";
 
 const StrategyContextProvider = ({ children }) => {
 
-  const [legs, setLegs] = usePathBasedLegs(defaultPresetName);
-
   const [selectedPreset, setSelectedPreset] = usePathBasedPresetName({
-      name: defaultPresetName,
-      custom: false
-    }, setLegs);
+    name: defaultPresetName,
+    custom: false
+  });
+
+  const [legs, setLegs] = usePathBasedLegs(selectedPreset.name);
 
   const updateLegs = (updatedLegs) => {
     if (updatedLegs.length <= 10) {

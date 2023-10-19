@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import { getPathName } from "./utils";
+import { getPathName, joinWords } from "./utils";
 import { PRESETS } from "../const/presets";
 import { splitWords } from "./utils";
 
@@ -25,18 +25,6 @@ const getSelectedPreset = (defaultPresetName, pathName) => {
   return { name: defaultPresetName, custom: false };
 };
 
-const getCustomPresetLegs = (presetName) => {
-  const customPresets = JSON.parse(localStorage.getItem("customPresets"));
-  if (customPresets) {
-    for (const preset of customPresets) {
-      if (preset.name === presetName) {
-        return preset.legs;
-      };
-    };
-  };
-  return null;
-};
-
 const usePathBasedPresetName = (initialState) => {
   const location = useLocation();
   const pathName = getPathName(location);
@@ -44,8 +32,13 @@ const usePathBasedPresetName = (initialState) => {
   const [selectedPreset, setSelectedPreset] = useState(() => getSelectedPreset(initialState.name, pathName));
 
   useEffect(() => {
+    const joinedWords = joinWords(initialState.name);
+    history.replaceState(selectedPreset.name, document.title, document.URL.split('#')[0] + `#/${joinedWords}`);
+  }, []);
+
+  useEffect(() => {
     if (pathName && pathName !== selectedPreset.name) {
-      setSelectedPreset(getSelectedPreset(initialState.name, pathName));
+      setSelectedPreset(getSelectedPreset(selectedPreset.name, pathName));
     };
   }, [pathName]);
 

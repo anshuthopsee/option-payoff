@@ -33,7 +33,7 @@ const usePathBasedLegs = (defaultPresetName) => {
   });
 
   useEffect(() => {
-    if (pathName && pathName !== legs.name) {
+    if (pathName && pathName !== defaultPresetName) {
       setLegs(getLegs(defaultPresetName, pathName));
     };
   }, [pathName]);
