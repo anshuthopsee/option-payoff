@@ -32,6 +32,7 @@ const usePathBasedPresetName = (initialState) => {
   const [selectedPreset, setSelectedPreset] = useState(() => getSelectedPreset(initialState.name, pathName));
 
   useEffect(() => {
+    if (window.location.hash) return;
     const joinedWords = joinWords(initialState.name);
     history.replaceState(selectedPreset.name, document.title, document.URL.split('#')[0] + `#/${joinedWords}`);
   }, []);
