@@ -74,68 +74,38 @@ const AddLegs = () => {
     updateLegs(updatedLegs);
   };
 
-  const renderTextField = (header) => {
-    if (header === "action") {
-      return (
-        <TextField 
-          label={"Action"}
-          onChange={handleActionChange}
-          value={action}
-          size= "small"
-          select
-          fullWidth
-        >
-          <MenuItem value="Buy">Buy</MenuItem>
-          <MenuItem value="Sell">Sell</MenuItem>
-        </TextField>
-      );
-    } else if (header === "type") {
-      return (
-        <TextField 
-          label={"Type"}
-          onChange={handleTypeChange}
-          value={type}
-          defaultValue={undefined}
-          size= "small"
-          select
-          fullWidth
-        >
-          <MenuItem value="CE">CE</MenuItem>
-          <MenuItem value="PE">PE</MenuItem>
-        </TextField>
-      );
-    } else if (header === "strike") {
-      return (
-        <TextField 
-          label={"Strike"}
-          onChange={handleStrikeChange}
-          value={strike}
-          defaultValue={undefined}
-          inputProps={{
-            inputMode: 'numeric',
-            pattern: '[0-9]*'
-          }}
-          size= "small"
-          fullWidth
-        />
-      );
-    } else if (header === "premium") {
-      return (
-        <TextField 
-          label={"Premium"}
-          onChange={hanldePremiumChange}
-          value={premium}
-          defaultValue={undefined}
-          inputProps={{
-            inputMode: 'numeric',
-            pattern: '[0-9]*'
-          }}
-          size= "small"
-          fullWidth
-        />
-      );
-    };
+  const renderTextField = (labelText, onChange, value, selectItems, inputProps) => {
+    return ( 
+      <TextField
+        label={labelText}
+        onChange={onChange}
+        value={value}
+        defaultValue={undefined}
+        size="small"
+        select={selectItems !== undefined}
+        fullWidth
+        inputProps={inputProps}
+      >
+        {selectItems &&
+          selectItems.map((item) => (
+            <MenuItem key={item} value={item}>
+              {item}
+            </MenuItem>
+          ))}
+      </TextField>
+    );
   };
+
+  const ActionTextField = renderTextField("Action", handleActionChange, action, ["Buy", "Sell"]);
+  const TypeTextField = renderTextField("Type", handleTypeChange, type, ["CE", "PE"]);
+  const StrikeTextField = renderTextField("Strike", handleStrikeChange, strike, undefined, {
+    inputMode: 'numeric',
+    pattern: '[0-9]*',
+  });
+  const PremiumTextField = renderTextField("Premium", hanldePremiumChange, premium, undefined, {
+    inputMode: 'numeric',
+    pattern: '[0-9]*',
+  });
     
   return (
     <Box sx={
@@ -153,7 +123,10 @@ const AddLegs = () => {
         {inputHeaders.map((header) => {
           return (
             <Grid item xs={3} key={header}>
-              {renderTextField(header)}
+              {header === "action" && ActionTextField}
+              {header === "strike" && StrikeTextField}
+              {header === "premium" && PremiumTextField}
+              {header === "type" && TypeTextField}
             </Grid>
             )
         })}
