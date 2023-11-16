@@ -60,17 +60,21 @@ const AddLegs = () => {
   };
 
   const addLeg = () => {
-    const id = legs.length;
-    const updatedLegs = [...legs, 
-      {
-        id: id, 
-        type: type, 
-        action: action, 
-        strike: Number(strike), 
-        premium: Number(premium),
-        selected: true
-      }
-    ];
+    const updatedLegs = [];
+
+    for (let i = 0; i < legs.length; i++) {
+      updatedLegs[i] = { ...legs[i], id: i };
+    };
+  
+    updatedLegs.push({
+      id: legs.length,
+      type: type,
+      action: action,
+      strike: Number(strike),
+      premium: Number(premium),
+      selected: true,
+    });
+  
     updateLegs(updatedLegs);
   };
 
