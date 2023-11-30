@@ -1,4 +1,7 @@
 import { useState, useContext, forwardRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { getSelectedStrategyLegs } from '../../features/selected/selectedSlice';
+import { addCustomStrategy, getCustomStrategies } from '../../features/custom/customSlice';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -6,7 +9,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-import { CustomPresetsContext } from '../../Contexts/CustomPresetsContextProvider';
 import { ToastContext } from '../../Contexts/ToastContextProvider';
 import { PRESETS } from '../../const/presets';
 import { Typography } from '@mui/material';
@@ -18,8 +20,10 @@ const Transition = forwardRef(function Transition(props, ref) {
 export default function SaveNewDialog({ dialogOpen, setDialogOpen }) {
   const [strategyName, setStrategyName] = useState("");
   const [saveDisabled, setSaveDisabled] = useState(false);
-  const { customPresets, saveNewCustomPreset } = useContext(CustomPresetsContext);
+  const customStrategies = useSelector(getCustomStrategies);
+  const selectedStrategyLegs = useSelector(getSelectedStrategyLegs);
   const { toggleToast } = useContext(ToastContext);
+  const dispatch = useDispatch();
   
   const handleClose = () => {
     setDialogOpen(false);
@@ -34,7 +38,7 @@ export default function SaveNewDialog({ dialogOpen, setDialogOpen }) {
       setStrategyName(value);
     };
 
-    const nameExists = !customPresets.every((preset) => preset.name !== value)
+    const nameExists = !customStrategies.every((preset) => preset.name !== value)
     || Object.keys(PRESETS).includes(value);
 
     if (nameExists) {
@@ -47,7 +51,12 @@ export default function SaveNewDialog({ dialogOpen, setDialogOpen }) {
   const handleSave = () => {
     if (strategyName) {
       const nameWithoutExtraSpaces = strategyName.trim().replace(/ +/g, ' ');
-      saveNewCustomPreset(nameWithoutExtraSpaces);
+      // saveNewCustomPreset(nameWithoutExtraSpaces);
+      dispatch(addCustomStrategy({
+        name: nameWithoutExtraSpaces,
+        legs: [...selectedStrategyLegs]
+      }));
+
       setDialogOpen(false);
       setStrategyName("");
       toggleToast({

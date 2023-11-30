@@ -1,15 +1,17 @@
-import { useState, useContext } from "react"
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import AddIcon from '@mui/icons-material/Add';
-import { StrategyContext } from '../../Contexts/StrategyContextProvider';
+import { getSelectedStrategyLegs, updateStrategyLegs } from "../../features/selected/selectedSlice";
 
 const AddLegs = () => {
   const inputHeaders = ["action", "strike", "premium", "type"];
-  const { legs, updateLegs } = useContext(StrategyContext);
+  const dispatch = useDispatch();
+  const selectedStrategyLegs = useSelector(getSelectedStrategyLegs);
 
   const [action, setAction] = useState('');
   const [strike, setStrike] = useState('');
@@ -62,12 +64,12 @@ const AddLegs = () => {
   const addLeg = () => {
     const updatedLegs = [];
 
-    for (let i = 0; i < legs.length; i++) {
-      updatedLegs[i] = { ...legs[i], id: i };
+    for (let i = 0; i < selectedStrategyLegs.length; i++) {
+      updatedLegs[i] = { ...selectedStrategyLegs[i], id: i };
     };
   
     updatedLegs.push({
-      id: legs.length,
+      id: selectedStrategyLegs.length,
       type: type,
       action: action,
       strike: Number(strike),
@@ -75,7 +77,7 @@ const AddLegs = () => {
       selected: true,
     });
   
-    updateLegs(updatedLegs);
+    dispatch(updateStrategyLegs(updatedLegs));
   };
 
   const renderTextField = (labelText, onChange, value, selectItems, inputProps) => {

@@ -1,7 +1,8 @@
-import { memo, useContext } from 'react';
+import { memo } from 'react';
+import { useSelector } from 'react-redux';
+import { getCustomStrategies } from '../../features/custom/customSlice';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { CustomPresetsContext } from '../../Contexts/CustomPresetsContextProvider';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import ShortStraddleSVG from './ShortStraddleSVG'
@@ -11,7 +12,7 @@ import BullPutSpreadSVG from './BullPutSpreadSVG';
 import CustomSVG from './CustomSVG';
 
 const Presets = memo(({ drawerView, toggleDrawer }) => {
-  const { customPresets } = useContext(CustomPresetsContext);
+  const customStrategies = useSelector(getCustomStrategies);
 
   return (
     <Box sx={{ backgroundColor: "background.secondary", borderRadius: "5px" }}>
@@ -47,9 +48,9 @@ const Presets = memo(({ drawerView, toggleDrawer }) => {
         <ShortStrangleSVG/>
         <BullCallSpreadSVG/>
         <BullPutSpreadSVG/>
-        {customPresets.map((customPreset, i) => {
+        {customStrategies.map((customStrategy, i) => {
           return (
-            <CustomSVG name={customPreset.name} key={customPreset.name} index={i}/>
+            <CustomSVG strategy={customStrategy} key={customStrategy.name} index={i}/>
           )
         })}
       </Box>

@@ -1,14 +1,20 @@
-import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { StrategyContext } from '../../Contexts/StrategyContextProvider';
+import { getSelectedStrategyName } from '../../features/selected/selectedSlice';
 
 const ShortStraddleSVG = () => {
   const navigate = useNavigate();
-  const { selectedPreset } = useContext(StrategyContext);
+  const dispatch = useDispatch();
+  const selectedStrategyName = useSelector(getSelectedStrategyName);
+  
   const isSelected = () => {
-    return (selectedPreset.name === "Short Straddle" && !selectedPreset.custom) 
+    return (selectedStrategyName === "Short Straddle") 
+  };
+
+  const handleClick = () => {
+    navigate("#/Short-Straddle");
   };
 
   return (
@@ -26,7 +32,7 @@ const ShortStraddleSVG = () => {
         justifyContent: "center" 
       }
     }
-      onClick={() => navigate("#/Short-Straddle")}
+      onClick={handleClick}
     >
       <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         {/* Background */}

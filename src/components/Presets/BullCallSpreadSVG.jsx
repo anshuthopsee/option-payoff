@@ -1,15 +1,19 @@
-import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from "react-redux";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { StrategyContext } from '../../Contexts/StrategyContextProvider';
+import { getSelectedStrategyName } from '../../features/selected/selectedSlice';
 
 const BullCallSpreadSVG = () => {
   const navigate = useNavigate();
-  const { selectedPreset } = useContext(StrategyContext);
+  const selectedStrategyName = useSelector(getSelectedStrategyName);
 
   const isSelected = () => {
-    return (selectedPreset.name === "Bull Call Spread" && !selectedPreset.custom);
+    return (selectedStrategyName === "Bull Call Spread");
+  };
+
+  const handleClick = () => {
+    navigate("#/Bull-Call-Spread");
   };
 
   return (
@@ -27,7 +31,7 @@ const BullCallSpreadSVG = () => {
         justifyContent: "center" 
       }
     }
-      onClick={() => navigate("#/Bull-Call-Spread")}
+      onClick={handleClick}
     >
       <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         {/* Background */}

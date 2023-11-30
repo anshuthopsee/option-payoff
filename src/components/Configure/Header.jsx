@@ -1,6 +1,7 @@
 import { useState, useContext } from 'react';
-import { StrategyContext } from '../../Contexts/StrategyContextProvider';
-import { CustomPresetsContext } from '../../Contexts/CustomPresetsContextProvider';
+import { useSelector, useDispatch } from 'react-redux';
+import { getSelectedStrategyName, getSelectedStrategyLegs } from '../../features/selected/selectedSlice';
+import { getCustomStrategies, updateCustomStrategy } from '../../features/custom/customSlice';
 import { ToastContext } from '../../Contexts/ToastContextProvider';
 import { Box, Typography, IconButton, Menu, MenuItem } from '@mui/material';
 import SaveNewDialog from './SaveNewDialog';
@@ -10,9 +11,11 @@ const Header = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const open = Boolean(anchorEl);
-  const { selectedPreset } = useContext(StrategyContext);
-  const { customPresets, saveCustomPreset } = useContext(CustomPresetsContext);
+  const dispatch = useDispatch();
+  const selectedStrategyName = useSelector(getSelectedStrategyName);
+  const selectedStrategyLegs = useSelector(getSelectedStrategyLegs);
   const { toggleToast } = useContext(ToastContext);
+  const customStrategies = useSelector(getCustomStrategies);
 
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -23,13 +26,18 @@ const Header = () => {
 
   const handleSaveClick = () => {
     handleClose();
-    saveCustomPreset();
+
+    dispatch(updateCustomStrategy({
+      name: selectedStrategyName,
+      legs: selectedStrategyLegs
+    }));
+
     toggleToast({
       show: true,
       severity: "success",
-      message: `Strategy "${selectedPreset.name}" updated.`,
+      message: `Strategy "${selectedStrategyName}" updated.`,
       key: new Date().getTime()
-    })
+    });
   };
 
   const handleSaveNewClick = () => {
@@ -38,7 +46,7 @@ const Header = () => {
   };
 
   const isCustomPresetSelected = () => {
-    return customPresets.every((preset) => preset.name !== selectedPreset.name);
+    return customStrategies.every((preset) => preset.name !== selectedStrategyName);
   };
 
   return (

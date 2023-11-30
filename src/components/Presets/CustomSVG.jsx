@@ -1,33 +1,56 @@
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { joinWords } from '../../hooks/utils';
+import { useDispatch, useSelector } from 'react-redux';
+import { joinWords } from '../../utils.js';
+import { setSelectedStrategy, getSelectedStrategyName } from '../../features/selected/selectedSlice';
+import { removeCustomStrategy, getCustomStrategies } from '../../features/custom/customSlice';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import { StrategyContext } from '../../Contexts/StrategyContextProvider';
-import { CustomPresetsContext } from '../../Contexts/CustomPresetsContextProvider';
 import { ToastContext } from '../../Contexts/ToastContextProvider';
 import CancelIcon from '@mui/icons-material/Close';
+import { PRESETS } from '../../const/presets';
 
-const CustomSVG = ({ name, index }) => {
+const CustomSVG = ({ strategy, index }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { selectedPreset } = useContext(StrategyContext);
-  const { deleteCustomPreset } = useContext(CustomPresetsContext);
+  const selectedStrategyName = useSelector(getSelectedStrategyName);
+  const customStrategies = useSelector(getCustomStrategies);
   const { toggleToast } = useContext(ToastContext);
 
   const isSelected = () => {
-    return (selectedPreset.name === name && selectedPreset.custom);
+    return (selectedStrategyName === strategy.name);
   };
 
   const handleDeleteClick = (e) => {
     e.stopPropagation();
-    deleteCustomPreset(index);
+    dispatch(removeCustomStrategy(index));
+
+    if (index === 0 && isSelected()) {
+      navigate("#/Bull-Put-Spread");
+      dispatch(setSelectedStrategy({
+        strategyName: "Bull Put Spread",
+        strategyLegs: [...PRESETS["Bull Put Spread"]]
+      }));
+    } else if (isSelected()) {
+      const precedingPreset = customStrategies[index-1];
+      navigate(`#/${joinWords(precedingPreset.name)}`);
+      dispatch(setSelectedStrategy({
+        strategyName: precedingPreset.name,
+        strategyLegs: precedingPreset.legs,
+      }));
+    };
+
     toggleToast({
       show: true,
       severity: "error",
-      message: `Strategy "${name}" deleted.`,
+      message: `Strategy "${strategy.name}" deleted.`,
       key: new Date().getTime()
     })
+  };
+
+  const handleClick = () => {
+    navigate(`#/${joinWords(strategy.name)}`);
   };
 
   return (
@@ -46,7 +69,7 @@ const CustomSVG = ({ name, index }) => {
         justifyContent: "center" 
       }
     }
-      onClick={() => navigate(`#/${joinWords(name)}`)}
+      onClick={handleClick}
     >
       <IconButton sx={{ position: 'absolute', top: "0px", right: "0px" }} onClick={handleDeleteClick}>
         <CancelIcon/>
@@ -62,7 +85,7 @@ const CustomSVG = ({ name, index }) => {
       </svg>
       <div style={{ position: "absolute", bottom: "7px", display: "flex", maxWidth: "80px", height: "fit-content", flexWrap: "wrap"}}>
         <Typography variant='body2' sx={{ fontSize: "11px", maxWidth: "100%", wordWrap: "break-word" }}>
-          {`${name}`}
+          {`${strategy.name}`}
         </Typography>
       </div>
     </Box>

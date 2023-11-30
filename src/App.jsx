@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect } from 'react';
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
 import createTheme from '@mui/material/styles/createTheme';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,9 +12,7 @@ import Box from '@mui/material/Box';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import { DarkModeContext } from './Contexts/DarkModeContextProvider';
-import StrategyContextProvider from './Contexts/StrategyContextProvider';
 import ToastContextProvider from './Contexts/ToastContextProvider';
-import CustomPresetsContextProvider from './Contexts/CustomPresetsContextProvider';
 import Chart from './components/Chart';
 import Configure from './components/Configure';
 import Presets from './components/Presets';
@@ -27,12 +26,21 @@ import Link from '@mui/material/Link';
 import GitHubIcon  from '@mui/icons-material/GitHub';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Toast from './components/Toast';
+import { splitWords, getPathName } from './utils';
+import { PRESETS } from './const/presets';
+import { setSelectedStrategy } from './features/selected/selectedSlice';
+import { getCustomStrategies } from './features/custom/customSlice';
 
 function App() {
   const { darkMode, setDarkMode } = useContext(DarkModeContext);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const viewportTheme = useTheme();
   const isLargeScreen = useMediaQuery(viewportTheme.breakpoints.up("lg"));
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const customStrategies = useSelector(getCustomStrategies);
+  const location = useLocation();
+  const pathName = splitWords(getPathName(location));
 
   const theme = createTheme({
     palette: {
@@ -84,7 +92,34 @@ function App() {
     if (isLargeScreen) {
       setDrawerOpen(false);
     }
-  }, [isLargeScreen])
+  }, [isLargeScreen]);
+
+  useEffect(() => {
+    if (window.location.hash) return;
+    history.replaceState(null, document.title, document.URL.split('#')[0] + "#/Short-Straddle");
+  }, []);
+
+  useEffect(() => {
+    const inPresets = Object.keys(PRESETS).includes(pathName);
+    if (inPresets) {
+      const selectedStrategy = {
+        strategyName: pathName,
+        strategyLegs: PRESETS[pathName],
+      };
+      dispatch(setSelectedStrategy(selectedStrategy));
+    } else {
+      const customStrategy = customStrategies.find((strategy) => {
+        return strategy.name === pathName;
+      });
+      if (customStrategy) {
+        const selectedStrategy = {
+          strategyName: customStrategy.name,
+          strategyLegs: customStrategy.legs,
+        };
+        dispatch(setSelectedStrategy(selectedStrategy));
+      };
+    };
+  }, [pathName]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -137,72 +172,68 @@ function App() {
             </IconButton>
           </Box>
         </AppBar>
-        <StrategyContextProvider>
-          <CustomPresetsContextProvider>
-            <Drawer
-              anchor={"right"}
-              open={drawerOpen ? true : false}
-              PaperProps={{
-                sx: { maxWidth: {xs: "145px", md: "280px"} },
+        <Drawer
+          anchor={"right"}
+          open={drawerOpen ? true : false}
+          PaperProps={{
+            sx: { maxWidth: {xs: "145px", md: "280px"} },
+          }}
+          onClose={toggleDrawer(false)}
+        >
+          <Presets drawerView={true} toggleDrawer={toggleDrawer}/>
+        </Drawer>
+        <Container 
+          maxWidth={false} 
+          disableGutters
+          sx={
+            {
+              minHeight: '100vh', 
+              maxHeight: "100%",
+              display: 'flex',
+              flexDirection: "column",
+              pt: "65px",
+              pb: "15px",
+              px: "10px",
+              maxWidth: '1500px',
+              flexGrow: 1,
+              position: "relative"
+            }
+          }
+        >
+          <div style={{ flex: 1 }}>
+            <Grid container spacing={"10px"}>
+              <Grid item lg={7} md={12} sm={12} xs={12}>
+                <Chart/>
+              </Grid>
+              <Grid item lg={5} md={12} sm={12} xs={12}>
+                <Configure darkMode={darkMode}/>
+              </Grid>
+            </Grid>
+            <Box sx={{ display: {lg: "block", xs: "none"}, mt: "10px", position: "relative" }}>
+              <Presets drawerView={false} toggleDrawer={toggleDrawer}/>
+            </Box>
+          </div>
+          <Typography 
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: 'center',
+              mt: "40px",
+              width: "100%",
+              height: "40px",
+            }}>
+            <Link 
+              href="https://github.com/anshuthopsee/option-payoff"sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "5px"
               }}
-              onClose={toggleDrawer(false)}
             >
-              <Presets drawerView={true} toggleDrawer={toggleDrawer}/>
-            </Drawer>
-            <Container 
-              maxWidth={false} 
-              disableGutters
-              sx={
-                {
-                  minHeight: '100vh', 
-                  maxHeight: "100%",
-                  display: 'flex',
-                  flexDirection: "column",
-                  pt: "65px",
-                  pb: "15px",
-                  px: "10px",
-                  maxWidth: '1500px',
-                  flexGrow: 1,
-                  position: "relative"
-                }
-              }
-            >
-              <div style={{ flex: 1 }}>
-                <Grid container spacing={"10px"}>
-                  <Grid item lg={7} md={12} sm={12} xs={12}>
-                    <Chart/>
-                  </Grid>
-                  <Grid item lg={5} md={12} sm={12} xs={12}>
-                    <Configure darkMode={darkMode}/>
-                  </Grid>
-                </Grid>
-                <Box sx={{ display: {lg: "block", xs: "none"}, mt: "10px", position: "relative" }}>
-                  <Presets drawerView={false} toggleDrawer={toggleDrawer}/>
-                </Box>
-              </div>
-              <Typography 
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: 'center',
-                  mt: "40px",
-                  width: "100%",
-                  height: "40px",
-                }}>
-                <Link 
-                  href="https://github.com/anshuthopsee/option-payoff"sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "5px"
-                  }}
-                >
-                  <GitHubIcon/> 
-                  anshuthopsee/option-payoff 
-                </Link>
-              </Typography>
-            </Container>
-          </CustomPresetsContextProvider>
-        </StrategyContextProvider>
+              <GitHubIcon/> 
+              anshuthopsee/option-payoff 
+            </Link>
+          </Typography>
+        </Container>
         <Toast/>
       </ToastContextProvider>
     </ThemeProvider>

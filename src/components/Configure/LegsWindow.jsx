@@ -1,4 +1,5 @@
-import { useState, useContext, useMemo } from 'react';
+import { useState, useMemo } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
@@ -11,33 +12,35 @@ import {
 } from '@mui/x-data-grid';
 import CustomGridInputCell from './CustomGridInputCell';
 import NoLegsOverlay from './NoLegsOverlay';
-import { StrategyContext } from '../../Contexts/StrategyContextProvider';
+import { getSelectedStrategyLegs, updateStrategyLegs } from '../../features/selected/selectedSlice';
 
 export default function LegsWindow({ legs }) {
 
-  const { updateLegs } = useContext(StrategyContext);
+  const dispatch = useDispatch();
+
+  const selectedStrategyLegs = useSelector(getSelectedStrategyLegs);
 
   const selectionModel = useMemo(() => {
-    return legs.filter(leg => leg.selected).map(leg => leg.id);
-  }, [legs]);
+    return selectedStrategyLegs.filter(leg => leg.selected).map(leg => leg.id);
+  }, [selectedStrategyLegs]);
 
   const [rowModesModel, setRowModesModel] = useState({});
   
   const handleDeleteClick = (id) => (e) => {
     e.stopPropagation(); 
-    const updatedLegs = legs.filter((row) => row.id !== id);
-    updateLegs(updatedLegs);
+    const updatedLegs = selectedStrategyLegs.filter((row) => row.id !== id);
+    dispatch(updateStrategyLegs(updatedLegs));
   };
 
   const handleRowSelectedModelChange = (newSelectionModel) => {
-    const deepCopyLegs = JSON.parse(JSON.stringify(legs));
+    const deepCopyLegs = JSON.parse(JSON.stringify(selectedStrategyLegs));
   
     const updatedLegs = deepCopyLegs.map((leg) => {
       leg.selected = newSelectionModel.includes(leg.id);
       return leg;
     });
   
-    updateLegs(updatedLegs);
+    dispatch(updateStrategyLegs(updatedLegs));
   };
 
   const handleRowEditStop = (params, event) => {
@@ -60,9 +63,9 @@ export default function LegsWindow({ legs }) {
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
     });
 
-    const editedRow = legs.find((row) => row.id === id);
+    const editedRow = selectedStrategyLegs.find((row) => row.id === id);
     if (editedRow.isNew) {
-      updateLegs(legs.filter((row) => row.id !== id));
+      dispatch(updateStrategyLegs(selectedStrategyLegs.filter((row) => row.id !== id)));
     };
   };
 
@@ -72,7 +75,7 @@ export default function LegsWindow({ legs }) {
 
   const processRowUpdate = (newRow) => {
     const updatedRow = { ...newRow, isNew: false };
-    updateLegs(legs.map((row) => (row.id === newRow.id ? updatedRow : row)));
+    dispatch(updateStrategyLegs(selectedStrategyLegs.map((row) => (row.id === newRow.id ? updatedRow : row))));
     return updatedRow;
   };
 
@@ -193,7 +196,7 @@ export default function LegsWindow({ legs }) {
     <div style={{ height: '100%', width: '100%' }}>
       <DataGrid
         checkboxSelection
-        rows={legs}
+        rows={selectedStrategyLegs}
         columns={columns}
         disableRowSelectionOnClick
         editMode="row"

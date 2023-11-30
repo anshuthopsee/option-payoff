@@ -1,5 +1,6 @@
-import { useRef, useEffect, useState, useContext } from 'react';
-import { StrategyContext } from '../../Contexts/StrategyContextProvider';
+import { useRef, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { getSelectedStrategyLegs } from '../../features/selected/selectedSlice';
 import * as d3 from 'd3';
 
 const tooltipStyle = {
@@ -71,7 +72,7 @@ const PayoffChart = () => {
   const chartAreaRef = useRef();
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
-  const { legs } = useContext(StrategyContext);
+  const selectedStrategyLegs = useSelector(getSelectedStrategyLegs);
 
   const resizeObserver = new ResizeObserver((entries) => {
     const chartParent = entries[0].target;
@@ -88,7 +89,7 @@ const PayoffChart = () => {
     const WIDTH = width - MARGIN.LEFT - MARGIN.RIGHT;
     const HEIGHT = height - MARGIN.TOP - MARGIN.BOTTOM;
 
-    const selectedLegs = legs.filter(leg => leg.selected);
+    const selectedLegs = selectedStrategyLegs.filter(leg => leg.selected);
     selectedLegs.sort((a, b) => a.strike - b.strike);
     const data = generatePayoffDiagram(selectedLegs);
 
@@ -326,7 +327,7 @@ const PayoffChart = () => {
     return () => {
       resizeObserver.unobserve(chartParentRef.current);
     };
-  }, [width, legs]);
+  }, [width, selectedStrategyLegs]);
 
   return (
     <div

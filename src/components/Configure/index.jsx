@@ -1,12 +1,11 @@
 import React, { useContext } from 'react'
+import { useSelector } from 'react-redux';
 import LegsWindow from './LegsWindow';
 import Box from '@mui/material/Box';
 import Header from './Header';
-import AddLegs from './AddLegs'
-import { StrategyContext } from '../../Contexts/StrategyContextProvider';
+import AddLegs from './AddLegs';
 
 const Configure = React.memo(({ darkMode }) => {
-  const { legs } = useContext(StrategyContext);
 
   return (
     <Box sx={
@@ -28,7 +27,7 @@ const Configure = React.memo(({ darkMode }) => {
             mt: "5px",
           }
         }>
-          <LegsWindow legs={legs}/>
+          <LegsWindow/>
         </Box>
       </Box>
       {/* <AddRemoveModal open={modalIsOpen} closeModal={closeModal}/> */}

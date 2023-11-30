@@ -1,12 +1,13 @@
-import { useRef, useContext } from 'react';
-import { StrategyContext } from '../../Contexts/StrategyContextProvider';
+import { useRef } from 'react';
+import { useSelector } from 'react-redux';
+import { getSelectedStrategyName } from '../../features/selected/selectedSlice';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import PayoffChart from './PayoffChart';
 
 const Chart = () => {
   const chartAreaRef = useRef();
-  const { selectedPreset } = useContext(StrategyContext);
+  const selectedStrategyName = useSelector(getSelectedStrategyName);
 
   return (
     <Box sx={
@@ -30,7 +31,7 @@ const Chart = () => {
         }
       }>
         <Typography variant='body1'>
-          {`${selectedPreset.name} Payoff at Expiry`}
+          {`${selectedStrategyName} Payoff at Expiry`}
         </Typography>
       </Box>
       <Box sx={{display: "flex", width: "100%", height: "100%"}} ref={chartAreaRef}>
