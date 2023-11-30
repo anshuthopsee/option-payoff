@@ -17,6 +17,9 @@ An Option Payoff visualizing tool, that allows you to create strategies, add and
 5. Hash routing, to select a strategy from the URL without throwing a 404 error. (Example - https://anshuthopsee.github.io/option-payoff/#/Bull-Call-Spread). The strategy name is case sensitive and all the words should be joined with "-" (hyphen).
 6. Numeric input value range: 0.1 >= value < 10000.
 
+## Recent updates
+1. Miigrated state management from React Context to Redux Toolkit.
+
 ## To be added
 1. Number of contracts input.
 2. Zoom functionality for chart.
