@@ -48,7 +48,7 @@ const store = configureStore({
 
 const savedCustomStrategies = JSON.parse(localStorage.getItem("customStrategies"));
 
-if (savedCustomStrategies.length > 0) {
+if (savedCustomStrategies?.length > 0) {
   store.dispatch(setCustomStrategies(savedCustomStrategies));
 };
 
