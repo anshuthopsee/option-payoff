@@ -18,7 +18,7 @@ An Option Payoff visualizing tool, that allows you to create strategies, add and
 6. Numeric input value range: 0.1 >= value < 10000.
 
 ## Recent updates
-1. Miigrated state management from React Context to Redux Toolkit.
+1. Migrated state management from React Context to Redux Toolkit.
 
 ## To be added
 1. Number of contracts input.
